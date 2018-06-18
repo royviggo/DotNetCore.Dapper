@@ -1,33 +1,17 @@
 ﻿using System.Data;
-using DotNetCore.Data.Interfaces;
 using Microsoft.Data.Sqlite;
 
 namespace DotNetCore.Data.Database
 {
-    public class SqliteDbFactory : IDbFactory
+    public class SqliteDbFactory : DbFactory
     {
-        private string _connectionString;
-        private IDbConnection _dbContext;
-
-        public SqliteDbFactory()
+        public SqliteDbFactory(string connectionString) : base(connectionString)
         {
         }
 
-        public SqliteDbFactory(string connectionString)
+        public override IDbConnection Connection(string connectionString)
         {
-            _connectionString = connectionString;
-            _dbContext = new SqliteConnection(connectionString);
-        }
-
-        public void Dispose()
-        {
-            _dbContext?.Dispose();
-            _dbContext = null;
-        }
-
-        public IDbConnection Context()
-        {
-            return _dbContext ?? (_dbContext = new SqliteConnection(_connectionString));
+            return new SqliteConnection(connectionString);
         }
     }
 }
