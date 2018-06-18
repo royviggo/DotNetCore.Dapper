@@ -4,16 +4,16 @@ using Microsoft.Data.Sqlite;
 
 namespace DotNetCore.Data.Database
 {
-    public class DbFactory : IDbFactory
+    public class SqliteDbFactory : IDbFactory
     {
         private string _connectionString;
         private IDbConnection _dbContext;
 
-        public DbFactory()
+        public SqliteDbFactory()
         {
         }
 
-        public DbFactory(string connectionString)
+        public SqliteDbFactory(string connectionString)
         {
             _connectionString = connectionString;
             _dbContext = new SqliteConnection(connectionString);
@@ -22,6 +22,7 @@ namespace DotNetCore.Data.Database
         public void Dispose()
         {
             _dbContext?.Dispose();
+            _dbContext = null;
         }
 
         public IDbConnection Context()

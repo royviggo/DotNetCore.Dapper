@@ -9,7 +9,7 @@ namespace DotNetCore
         {
             var connectionString = @"Data Source=C:\ASP.NET\DotNetCore.Dapper\DotNetCore.Data\DotNetCore.sqlite";
 
-            var unitOfWork = new UnitOfWork(new DbFactory(connectionString));
+            var unitOfWork = new UnitOfWork(new SqliteDbFactory(connectionString));
 
             var events = unitOfWork.Events.GetByPersonId(1);
             foreach (var e in events)
