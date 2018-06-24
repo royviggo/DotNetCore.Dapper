@@ -5,5 +5,6 @@ namespace DotNetCore.Data.Interfaces
 {
     public interface IPersonRepository : IGenericRepository<Person>
     {
+        IEnumerable<Person> FindByName(string name);
     }
 }

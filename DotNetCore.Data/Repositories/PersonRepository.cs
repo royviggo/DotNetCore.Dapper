@@ -27,6 +27,13 @@ namespace DotNetCore.Data.Repositories
             return Db.Context().Query<Person>(sql, param: new { }, transaction: DbTransaction);
         }
 
+        public IEnumerable<Person> FindByName(string name)
+        {
+            var sql = GetBasePersonSql() + "WHERE (FirstName like @Name OR Patronym like @Name OR LastName like @Name)";
+
+            return Db.Context().Query<Person>(sql, param: new { Name = "%" + name + "%" }, transaction: DbTransaction);
+        }
+
         private string GetBasePersonSql()
         {
             return @"

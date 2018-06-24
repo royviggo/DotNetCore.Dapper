@@ -29,10 +29,19 @@ namespace DotNetCore
             }
 
             Console.WriteLine();
-            Console.WriteLine("Persons");
+            Console.WriteLine("All Persons");
 
             var persons = unitOfWork.Persons.GetAll();
             foreach (var p in persons)
+            {
+                Console.WriteLine("{0} - {1} {2} {3}, {4}, {5} ({6} - {7})", p.Id, p.FirstName, p.Patronym, p.LastName, p.Gender, p.Status, p.BornYear, p.DeathYear);
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Find Persons with name");
+
+            var personsByName = unitOfWork.Persons.FindByName("anne");
+            foreach (var p in personsByName)
             {
                 Console.WriteLine("{0} - {1} {2} {3}, {4}, {5} ({6} - {7})", p.Id, p.FirstName, p.Patronym, p.LastName, p.Gender, p.Status, p.BornYear, p.DeathYear);
             }

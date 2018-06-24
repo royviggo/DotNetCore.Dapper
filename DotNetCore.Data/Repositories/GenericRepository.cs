@@ -71,9 +71,5 @@ namespace DotNetCore.Data.Repositories
         {
             return Db.Context().GetAll<TEntity>();
         }
-        public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
