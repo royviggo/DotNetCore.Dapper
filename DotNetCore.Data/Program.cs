@@ -48,7 +48,7 @@ namespace DotNetCore
 
             Console.WriteLine();
             Console.WriteLine("Press any key...");
-            Console.ReadKey();
+            Console.ReadLine();
         }
     }
 }
