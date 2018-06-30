@@ -1,10 +1,11 @@
 ﻿using DotNetCore.Data.Entities;
 using DotNetCore.Data.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using Dapper;
 using DotNetCore.Data.Models;
+using DotNetCore.Data.Utils;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Dapper;
 
 namespace DotNetCore.Data.Repositories
 {
@@ -16,7 +17,7 @@ namespace DotNetCore.Data.Repositories
 
         public override Event Get(int id)
         {
-            var sql = GetBaseEventSql() + "WHERE e.Id = @Id";
+            var sql = GetBaseQuery().Where("e.Id = @Id");
 
             return Db.Context().Query<EventData, EventType, Place, Event, Event>(sql, (ed, et, p, e) =>
             {
@@ -30,19 +31,24 @@ namespace DotNetCore.Data.Repositories
 
         public IEnumerable<Event> GetByPersonId(int personId)
         {
-            var sql = GetBaseEventSql() + "WHERE e.PersonId = @PersonId";
+            var query = GetBaseQuery().Where("e.PersonId = @PersonId");
 
-            return Db.Context().Query<EventData, EventType, Place, Event, Event>(sql, (ed, et, p, e) =>
+            return GetListSql(query, new { PersonId = personId });
+        }
+
+        public override IEnumerable<Event> GetListSql(string query, object param)
+        {
+            return Db.Context().Query<EventData, EventType, Place, Event, Event>(query, (ed, et, p, e) =>
             {
                 e.EventType = et;
                 e.Place = p;
                 e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom_Year, ed.Date_DateFrom_Month, ed.Date_DateFrom_Day),
                                      new DatePart(ed.Date_DateTo_Year, ed.Date_DateTo_Month, ed.Date_DateTo_Day), ed.Date_DatePhrase, ed.Date_IsValid);
                 return e;
-            }, param: new { PersonId = personId }, transaction: DbTransaction);
+            }, param: param, transaction: DbTransaction);
         }
 
-        private string GetBaseEventSql()
+        public override string GetBaseQuery()
         {
             return @"
                 SELECT e.Id, e.EventTypeId, e.PersonId, e.PlaceId,

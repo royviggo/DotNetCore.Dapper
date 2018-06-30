@@ -18,6 +18,21 @@ namespace DotNetCore.Data.Database
 
         public abstract IDbConnection Connection(string connectionString);
 
+        public virtual string IdentitySql()
+        {
+            return "";
+        }
+
+        public virtual string PagingTemplate(int pageNumber, int rowsPerPage)
+        {
+            return "{0}";
+        }
+
+        public virtual string EncapsulationTemplate()
+        {
+            return "{0}";
+        }
+
         public virtual IDbConnection Context()
         {
             return _dbContext ?? (_dbContext = Connection(_connectionString));

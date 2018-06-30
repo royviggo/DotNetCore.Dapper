@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq.Expressions;
+using Dapper;
 using Dapper.Contrib.Extensions;
 using DotNetCore.Data.Interfaces;
+using DotNetCore.Data.Utils;
 
 namespace DotNetCore.Data.Repositories
 {
@@ -27,39 +28,39 @@ namespace DotNetCore.Data.Repositories
         public IDbFactory Db => _dbFactory;
         public IDbTransaction DbTransaction => _transaction;
 
-        public virtual void Add(TEntity entity)
+        public virtual long Add(TEntity entity)
         {
-            var result = Db.Context().Insert(entity);
+            return Db.Context().Insert(entity);
         }
 
-        public virtual void AddRange(IEnumerable<TEntity> entities)
+        public virtual long AddRange(IEnumerable<TEntity> entities)
         {
-            var result = Db.Context().Insert(entities);
+            return Db.Context().Insert(entities);
         }
 
-        public virtual void Update(TEntity entity)
+        public virtual bool Update(TEntity entity)
         {
-            var result = Db.Context().Update(entity);
+            return Db.Context().Update(entity);
         }
 
-        public virtual void UpdateRange(IEnumerable<TEntity> entities)
+        public virtual bool UpdateRange(IEnumerable<TEntity> entities)
         {
-            var result = Db.Context().Update(entities);
+            return Db.Context().Update(entities);
         }
 
-        public virtual void Remove(int id)
+        public virtual bool Remove(int id)
         {
-            var result = Db.Context().Delete(Get(id));
+            return Db.Context().Delete(Get(id));
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual bool Remove(TEntity entity)
         {
-            var result = Db.Context().Delete(entity);
+            return Db.Context().Delete(entity);
         }
 
-        public virtual void RemoveRange(IEnumerable<TEntity> entities)
+        public virtual bool RemoveRange(IEnumerable<TEntity> entities)
         {
-            var result = Db.Context().Delete(entities);
+            return Db.Context().Delete(entities);
         }
 
         public virtual TEntity Get(int id)
@@ -70,6 +71,53 @@ namespace DotNetCore.Data.Repositories
         public virtual IEnumerable<TEntity> GetAll()
         {
             return Db.Context().GetAll<TEntity>();
+        }
+
+        public virtual IEnumerable<TEntity> GetList(string where)
+        {
+            return GetList(where, null, string.Empty);
+        }
+
+        public virtual IEnumerable<TEntity> GetList(string where, object param)
+        {
+            return GetList(where, param, string.Empty);
+        }
+
+        public virtual IEnumerable<TEntity> GetList(string where, object param, string orderBy)
+        {
+            var query = GetBaseQuery().Where(where).OrderBy(orderBy);
+
+            return GetListSql(query, param);
+        }
+
+        public virtual IEnumerable<TEntity> GetListPaged(string where, int pageNumber, int rowsPerPage)
+        {
+            return GetListPaged(where, null, string.Empty, pageNumber, rowsPerPage);
+        }
+
+        public virtual IEnumerable<TEntity> GetListPaged(string where, object param, int pageNumber, int rowsPerPage)
+        {
+            return GetListPaged(where, param, string.Empty, pageNumber, rowsPerPage);
+        }
+
+        public virtual IEnumerable<TEntity> GetListPaged(string where, object param, string orderBy, int pageNumber, int rowsPerPage)
+        {
+            if (pageNumber < 1 || rowsPerPage < 1)
+                throw new ArgumentOutOfRangeException("Arguments pageNumber and rowsPerPage must be greater than 0");
+
+            var query = GetBaseQuery().Where(where).OrderBy(orderBy).Paging(Db.PagingTemplate(pageNumber, rowsPerPage));
+
+            return GetListSql(query, param);
+        }
+
+        public virtual IEnumerable<TEntity> GetListSql(string query, object param)
+        {
+            return Db.Context().Query<TEntity>(query, param);
+        }
+
+        public virtual string GetBaseQuery()
+        {
+            return typeof(TEntity).Select();
         }
     }
 }

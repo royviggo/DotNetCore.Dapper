@@ -1,9 +1,9 @@
 ﻿using DotNetCore.Data.Entities;
 using DotNetCore.Data.Interfaces;
+using DotNetCore.Data.Utils;
+using System.Collections.Generic;
 using System.Data;
 using Dapper;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace DotNetCore.Data.Repositories
 {
@@ -15,26 +15,26 @@ namespace DotNetCore.Data.Repositories
 
         public override Person Get(int id)
         {
-            var sql = GetBasePersonSql() + "WHERE Id = @Id";
+            var sql = GetBaseQuery().Where("Id = @Id");
 
-            return Db.Context().Query<Person>(sql, param: new { Id = id }, transaction: DbTransaction).FirstOrDefault();
+            return Db.Context().QuerySingle<Person>(sql, param: new { Id = id }, transaction: DbTransaction);
         }
 
         public override IEnumerable<Person> GetAll()
         {
-            var sql = GetBasePersonSql();
+            var sql = GetBaseQuery();
 
             return Db.Context().Query<Person>(sql, param: new { }, transaction: DbTransaction);
         }
 
         public IEnumerable<Person> FindByName(string name)
         {
-            var sql = GetBasePersonSql() + "WHERE (FirstName like @Name OR Patronym like @Name OR LastName like @Name)";
+            var sql = GetBaseQuery().Where("FirstName like @Name OR Patronym like @Name OR LastName like @Name");
 
-            return Db.Context().Query<Person>(sql, param: new { Name = "%" + name + "%" }, transaction: DbTransaction);
+            return Db.Context().Query<Person>(sql, param: new { Name = name + "%" }, transaction: DbTransaction);
         }
 
-        private string GetBasePersonSql()
+        public override string GetBaseQuery()
         {
             return @"
                 SELECT Id,
@@ -48,7 +48,7 @@ namespace DotNetCore.Data.Repositories
                        Status,
                        CreatedDate,
                        ModifiedDate
-                FROM Persons
+                FROM   Persons
                 ";
         }
     }

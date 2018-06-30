@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace DotNetCore.Data.Interfaces
 {
@@ -8,15 +7,20 @@ namespace DotNetCore.Data.Interfaces
     {
         void Dispose();
 
-        void Add(TEntity entity);
-        void AddRange(IEnumerable<TEntity> entities);
-        void Update(TEntity entity);
-        void UpdateRange(IEnumerable<TEntity> entities);
-        void Remove(int id);
-        void Remove(TEntity entity);
-        void RemoveRange(IEnumerable<TEntity> entities);
+        long Add(TEntity entity);
+        long AddRange(IEnumerable<TEntity> entities);
+        bool Update(TEntity entity);
+        bool UpdateRange(IEnumerable<TEntity> entities);
+        bool Remove(int id);
+        bool Remove(TEntity entity);
+        bool RemoveRange(IEnumerable<TEntity> entities);
 
         TEntity Get(int id);
         IEnumerable<TEntity> GetAll();
+        IEnumerable<TEntity> GetList(string where);
+        IEnumerable<TEntity> GetList(string where, object param);
+        IEnumerable<TEntity> GetListPaged(string where, int pageNumber, int rowsPerPage);
+        IEnumerable<TEntity> GetListPaged(string where, object param, int pageNumber, int rowsPerPage);
+        IEnumerable<TEntity> GetListPaged(string where, object param, string orderBy, int pageNumber, int rowsPerPage);
     }
 }
