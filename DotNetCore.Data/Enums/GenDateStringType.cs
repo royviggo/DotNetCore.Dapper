@@ -2,7 +2,7 @@
 {
     public enum GenDateStringType
     {
-        Text = 1,
         Date = 1,
+        Text = 2,
     }
 }
