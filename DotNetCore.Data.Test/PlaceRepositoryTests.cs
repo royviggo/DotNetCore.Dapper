@@ -33,6 +33,7 @@ namespace DotNetCore.Data.Test
 
                 Assert.NotNull(unitOfWork);
                 Assert.NotNull(place);
+                Assert.IsType<Place>(place);
                 Assert.Equal(0, place.Id);
             }
         }
@@ -48,16 +49,17 @@ namespace DotNetCore.Data.Test
                     CreatedDate = DateTime.Now,
                     ModifiedDate = DateTime.Now,
                 };
+
                 var placeId = unitOfWork.Places.Add(place);
                 unitOfWork.Save();
 
                 var place2 = unitOfWork.Places.Get(placeId);
 
-                Assert.Equal(placeId, place2.Id);
-                Assert.Equal("Test Place", place2.Name);
-
                 unitOfWork.Places.Remove(placeId);
                 unitOfWork.Save();
+
+                Assert.Equal(placeId, place2.Id);
+                Assert.Equal("Test Place", place2.Name);
             }
         }
 
@@ -70,6 +72,7 @@ namespace DotNetCore.Data.Test
                 var oldValue = place.Name;
 
                 place.Name = "Testing";
+                unitOfWork.Places.Update(place);
                 unitOfWork.Save();
 
                 var place2 = unitOfWork.Places.Get(0);
