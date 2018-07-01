@@ -7,8 +7,8 @@ namespace DotNetCore.Data.Interfaces
     {
         void Dispose();
 
-        long Add(TEntity entity);
-        long AddRange(IEnumerable<TEntity> entities);
+        int Add(TEntity entity);
+        int AddRange(IEnumerable<TEntity> entities);
         bool Update(TEntity entity);
         bool UpdateRange(IEnumerable<TEntity> entities);
         bool Remove(int id);

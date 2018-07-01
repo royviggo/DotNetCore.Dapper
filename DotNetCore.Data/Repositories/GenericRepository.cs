@@ -28,14 +28,14 @@ namespace DotNetCore.Data.Repositories
         public IDbFactory Db => _dbFactory;
         public IDbTransaction DbTransaction => _transaction;
 
-        public virtual long Add(TEntity entity)
+        public virtual int Add(TEntity entity)
         {
-            return Db.Context().Insert(entity);
+            return (int)Db.Context().Insert(entity);
         }
 
-        public virtual long AddRange(IEnumerable<TEntity> entities)
+        public virtual int AddRange(IEnumerable<TEntity> entities)
         {
-            return Db.Context().Insert(entities);
+            return (int)Db.Context().Insert(entities);
         }
 
         public virtual bool Update(TEntity entity)
