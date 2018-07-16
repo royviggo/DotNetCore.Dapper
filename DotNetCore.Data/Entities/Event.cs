@@ -1,4 +1,4 @@
-﻿using DotNetCore.Data.Models;
+﻿using GenDateTools.Models;
 
 namespace DotNetCore.Data.Entities
 {

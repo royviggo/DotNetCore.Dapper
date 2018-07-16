@@ -69,7 +69,7 @@ namespace DotNetCore
 
                 Console.WriteLine();
                 Console.WriteLine("Press any key...");
-                Console.ReadLine();
+                Console.ReadKey();
 
             }
         }

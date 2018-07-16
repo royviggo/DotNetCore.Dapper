@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
@@ -10,6 +10,14 @@
   <ItemGroup>
     <Compile Remove="Database\DatabaseUtil.cs" />
     <Compile Remove="Database\DotNetCoreContext.cs" />
+    <Compile Remove="Enums\GenDateStringType.cs" />
+    <Compile Remove="Enums\GenDateType.cs" />
+    <Compile Remove="Extensions\GenExtension.cs" />
+    <Compile Remove="Interfaces\IDateStringParser.cs" />
+    <Compile Remove="Models\DatePart.cs" />
+    <Compile Remove="Models\DateStringParser.cs" />
+    <Compile Remove="Models\GenDate.cs" />
+    <Compile Remove="Models\MonthName.cs" />
     <Compile Remove="Repositories\IEventRepository.cs" />
   </ItemGroup>
 
@@ -17,6 +25,15 @@
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="Dapper.Contrib" Version="1.50.5" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\GenDateTools\GenDateTools\GenDateTools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>

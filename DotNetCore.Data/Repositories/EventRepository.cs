@@ -1,7 +1,7 @@
 ﻿using DotNetCore.Data.Entities;
 using DotNetCore.Data.Interfaces;
-using DotNetCore.Data.Models;
 using DotNetCore.Data.Utils;
+using GenDateTools.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -23,8 +23,7 @@ namespace DotNetCore.Data.Repositories
             {
                 e.EventType = et;
                 e.Place = p;
-                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom_Year, ed.Date_DateFrom_Month, ed.Date_DateFrom_Day),
-                                     new DatePart(ed.Date_DateTo_Year, ed.Date_DateTo_Month, ed.Date_DateTo_Day), ed.Date_DatePhrase, ed.Date_IsValid);
+                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom), new DatePart(ed.Date_DateTo), ed.Date_DatePhrase, ed.Date_IsValid);
                 return e;
             }, param: new { Id = id }, transaction: DbTransaction).FirstOrDefault();
         }
@@ -42,8 +41,7 @@ namespace DotNetCore.Data.Repositories
             {
                 e.EventType = et;
                 e.Place = p;
-                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom_Year, ed.Date_DateFrom_Month, ed.Date_DateFrom_Day),
-                                     new DatePart(ed.Date_DateTo_Year, ed.Date_DateTo_Month, ed.Date_DateTo_Day), ed.Date_DatePhrase, ed.Date_IsValid);
+                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom), new DatePart(ed.Date_DateTo), ed.Date_DatePhrase, ed.Date_IsValid);
                 return e;
             }, param: param, transaction: DbTransaction);
         }
@@ -52,9 +50,7 @@ namespace DotNetCore.Data.Repositories
         {
             return @"
                 SELECT e.Id, e.EventTypeId, e.PersonId, e.PlaceId,
-                       e.Date_DateType, 
-                       e.Date_DateFrom_Year, e.Date_DateFrom_Month, e.Date_DateFrom_Day, e.Date_DateTo_Year, e.Date_DateTo_Month, e.Date_DateTo_Day, 
-                       e.Date_DatePhrase, e.Date_SortDate, e.Date_IsValid,
+                       e.Date_DateType, e.Date_DateFrom, e.Date_DateTo, e.Date_DatePhrase, e.Date_SortDate, e.Date_IsValid,
                        e.Description, e.CreatedDate, e.ModifiedDate,
                        et.Id, et.IsFamilyEvent, et.Name, et.GedcomTag, et.UseDate, et.UsePlace, et.UseDescription, et.Sentence, et.CreatedDate, et.ModifiedDate,
                        p.Id, p.Name, p.CreatedDate, p.ModifiedDate,
