@@ -1,5 +1,5 @@
 ﻿using Dapper.Contrib.Extensions;
-using GenDateTools.Models;
+using GenDateTools;
 
 namespace DotNetCore.Data.Entities
 {

@@ -1,7 +1,7 @@
 ﻿using DotNetCore.Data.Entities;
 using DotNetCore.Data.Interfaces;
 using DotNetCore.Data.Utils;
-using GenDateTools.Models;
+using GenDateTools;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
