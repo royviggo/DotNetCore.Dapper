@@ -32,6 +32,15 @@ namespace DotNetCore
                 }
 
                 Console.WriteLine();
+                Console.WriteLine("All events");
+
+                var eventsAll = unitOfWork.Events.GetList("");
+                foreach (var e in eventsAll)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
                 Console.WriteLine("10 first Persons");
 
                 var persons = unitOfWork.Persons.GetListPaged("", null, "FirstName, Patronym", 1, 10);
@@ -69,7 +78,7 @@ namespace DotNetCore
 
                 Console.WriteLine();
                 Console.WriteLine("Press any key...");
-                Console.ReadKey();
+                Console.ReadLine();
 
             }
         }

@@ -12,7 +12,7 @@ namespace DotNetCore.Data.Entities
 
         public int PlaceId { get; set; }
 
-        public GenDateType Date_DateType { get; set; }
+        public long Date_DateString { get; set; }
         public int Date_DateFrom { get; set; }
         public int Date_DateTo { get; set; }
         public string Date_DatePhrase { get; set; }

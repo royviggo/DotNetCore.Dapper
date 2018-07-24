@@ -23,7 +23,7 @@ namespace DotNetCore.Data.Repositories
             {
                 e.EventType = et;
                 e.Place = p;
-                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom), new DatePart(ed.Date_DateTo), ed.Date_DatePhrase, ed.Date_IsValid);
+                e.Date = new GenDate(ed.Date_DateString);
                 return e;
             }, param: new { Id = id }, transaction: DbTransaction).FirstOrDefault();
         }
@@ -41,7 +41,7 @@ namespace DotNetCore.Data.Repositories
             {
                 e.EventType = et;
                 e.Place = p;
-                e.Date = new GenDate(ed.Date_DateType, new DatePart(ed.Date_DateFrom), new DatePart(ed.Date_DateTo), ed.Date_DatePhrase, ed.Date_IsValid);
+                e.Date = new GenDate(ed.Date_DateString);
                 return e;
             }, param: param, transaction: DbTransaction);
         }
@@ -50,14 +50,14 @@ namespace DotNetCore.Data.Repositories
         {
             return @"
                 SELECT e.Id, e.EventTypeId, e.PersonId, e.PlaceId,
-                       e.Date_DateType, e.Date_DateFrom, e.Date_DateTo, e.Date_DatePhrase, e.Date_SortDate, e.Date_IsValid,
+                       e.Date_DateString,
                        e.Description, e.CreatedDate, e.ModifiedDate,
                        et.Id, et.IsFamilyEvent, et.Name, et.GedcomTag, et.UseDate, et.UsePlace, et.UseDescription, et.Sentence, et.CreatedDate, et.ModifiedDate,
                        p.Id, p.Name, p.CreatedDate, p.ModifiedDate,
                        e.Id, e.EventTypeId, e.PersonId, e.PlaceId, e.Description, e.CreatedDate, e.ModifiedDate
                 FROM Events e
                 INNER JOIN EventTypes et ON e.EventTypeId = et.Id
-                LEFT OUTER JOIN Places p ON e.PlaceId = p.Id
+                INNER JOIN Places p ON e.PlaceId = p.Id
                 ";
         }
     }
