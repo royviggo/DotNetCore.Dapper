@@ -70,7 +70,7 @@ namespace DotNetCore.Data.Repositories
 
         public virtual IEnumerable<TEntity> GetAll()
         {
-            return Db.Context().GetAll<TEntity>();
+            return GetList(string.Empty);
         }
 
         public virtual IEnumerable<TEntity> GetList(string where)
