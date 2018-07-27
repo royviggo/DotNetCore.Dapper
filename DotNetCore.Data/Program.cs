@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using DotNetCore.Data.Database;
+using GenDateTools;
 
 namespace DotNetCore
 {
@@ -36,6 +37,15 @@ namespace DotNetCore
 
                 var eventsAll = unitOfWork.Events.GetList("");
                 foreach (var e in eventsAll)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Events between 1700 and 1800");
+
+                var eventsBetween = unitOfWork.Events.GetByDate(new GenDate(GenDateType.Between, new DatePart(17000000), new DatePart(17990000)));
+                foreach (var e in eventsBetween)
                 {
                     Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
                 }

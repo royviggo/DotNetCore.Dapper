@@ -35,6 +35,13 @@ namespace DotNetCore.Data.Repositories
             return GetListSql(query, new { PersonId = personId });
         }
 
+        public IEnumerable<Event> GetByDate(GenDate date)
+        {
+            var query = GetBaseQuery().Where(GetDateWhere());
+
+            return GetListSql(query, new { date.From, date.To });
+        }
+
         public override IEnumerable<Event> GetListSql(string query, object param)
         {
             return Db.Context().Query<EventData, EventType, Place, Event, Event>(query, (ed, et, p, e) =>
@@ -59,6 +66,14 @@ namespace DotNetCore.Data.Repositories
                 INNER JOIN EventTypes et ON e.EventTypeId = et.Id
                 INNER JOIN Places p ON e.PlaceId = p.Id
                 ";
+        }
+
+        private static string GetDateWhere()
+        {
+            return @"((E.Date_From BETWEEN @From AND @To) OR 
+                      (E.Date_To BETWEEN @From AND @To) OR
+                      (@From BETWEEN E.Date_From AND E.Date_To) OR
+                      (@To BETWEEN E.Date_From AND E.Date_To))";
         }
     }
 }
