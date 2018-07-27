@@ -14,6 +14,11 @@ namespace DotNetCore.Data.Utils
             return !string.IsNullOrWhiteSpace(where) ? $"{query} WHERE {where} " : query;
         }
 
+        public static string And(this string query, string where)
+        {
+            return !string.IsNullOrWhiteSpace(where) ? $"{query} AND {where} " : query;
+        }
+
         public static string OrderBy(this string query, string orderBy)
         {
             return !string.IsNullOrWhiteSpace(orderBy) ? $"{query} ORDER BY {orderBy} " : query;

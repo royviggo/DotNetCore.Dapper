@@ -28,7 +28,7 @@ namespace DotNetCore.Data.Repositories
             }, param: new { Id = id }, transaction: DbTransaction).FirstOrDefault();
         }
 
-        public IEnumerable<Event> GetByPersonId(int personId)
+        public IEnumerable<Event> GetByPerson(int personId)
         {
             var query = GetBaseQuery().Where("e.PersonId = @PersonId");
 
@@ -37,9 +37,40 @@ namespace DotNetCore.Data.Repositories
 
         public IEnumerable<Event> GetByDate(GenDate date)
         {
-            var query = GetBaseQuery().Where(GetDateWhere());
+            var query = GetBaseQuery().Where(GetWhereDate());
 
             return GetListSql(query, new { date.From, date.To });
+        }
+
+        public IEnumerable<Event> GetByEventType(EventType eventType)
+        {
+            return GetByEventType(eventType.Id);
+        }
+
+        public IEnumerable<Event> GetByEventType(int eventTypeId)
+        {
+            var query = GetBaseQuery().Where(GetWhereEventType());
+
+            return GetListSql(query, new { EventTypeId = eventTypeId });
+        }
+
+        public IEnumerable<Event> GetByEventTypeAndDate(int eventTypeId, GenDate date)
+        {
+            var query = GetBaseQuery().Where(GetWhereDate()).And(GetWhereEventType());
+
+            return GetListSql(query, new { EventTypeId = eventTypeId, date.From, date.To });
+        }
+
+        public IEnumerable<Event> GetByPlace(Place place)
+        {
+            return GetByPlace(place.Id);
+        }
+
+        public IEnumerable<Event> GetByPlace(int placeId)
+        {
+            var query = GetBaseQuery().Where(GetWherePlace());
+
+            return GetListSql(query, new { PlaceId = placeId });
         }
 
         public override IEnumerable<Event> GetListSql(string query, object param)
@@ -68,12 +99,22 @@ namespace DotNetCore.Data.Repositories
                 ";
         }
 
-        private static string GetDateWhere()
+        private static string GetWhereDate()
         {
-            return @"((E.Date_From BETWEEN @From AND @To) OR 
-                      (E.Date_To BETWEEN @From AND @To) OR
-                      (@From BETWEEN E.Date_From AND E.Date_To) OR
-                      (@To BETWEEN E.Date_From AND E.Date_To))";
+            return @"((e.Date_From BETWEEN @From AND @To) OR 
+                      (e.Date_To BETWEEN @From AND @To) OR
+                      (@From BETWEEN e.Date_From AND e.Date_To) OR
+                      (@To BETWEEN e.Date_From AND e.Date_To))";
+        }
+
+        private static string GetWhereEventType()
+        {
+            return @"(e.EventTypeId = @EventTypeId)";
+        }
+
+        private static string GetWherePlace()
+        {
+            return @"(e.PlaceId = @PlaceId)";
         }
     }
 }

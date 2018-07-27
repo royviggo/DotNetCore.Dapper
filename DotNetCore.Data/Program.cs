@@ -26,7 +26,7 @@ namespace DotNetCore
                 Console.WriteLine();
                 Console.WriteLine("Events for a person");
 
-                var events = unitOfWork.Events.GetByPersonId(1);
+                var events = unitOfWork.Events.GetByPerson(1);
                 foreach (var e in events)
                 {
                     Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
@@ -46,6 +46,33 @@ namespace DotNetCore
 
                 var eventsBetween = unitOfWork.Events.GetByDate(new GenDate(GenDateType.Between, new DatePart(17000000), new DatePart(17990000)));
                 foreach (var e in eventsBetween)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Events of type birth");
+
+                var eventsType = unitOfWork.Events.GetByEventType(1);
+                foreach (var e in eventsType)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Births in the 1700");
+
+                var eventsTypeDate = unitOfWork.Events.GetByEventTypeAndDate(1, new GenDate(GenDateType.Between, new DatePart(17000000), new DatePart(17990000)));
+                foreach (var e in eventsTypeDate)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Events in Stor-Alteren");
+
+                var eventsPlace = unitOfWork.Events.GetByPlace(177);
+                foreach (var e in eventsPlace)
                 {
                     Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
                 }
