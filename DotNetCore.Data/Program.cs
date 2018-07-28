@@ -60,6 +60,15 @@ namespace DotNetCore
                 }
 
                 Console.WriteLine();
+                Console.WriteLine("Beginning of life Events");
+
+                var eventsBol = unitOfWork.Events.GetByEventType(new int[] { 1, 3, 7 });
+                foreach (var e in eventsBol)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
                 Console.WriteLine("Births in the 1700");
 
                 var eventsTypeDate = unitOfWork.Events.GetByEventTypeAndDate(1, new GenDate(GenDateType.Between, new DatePart(17000000), new DatePart(17990000)));

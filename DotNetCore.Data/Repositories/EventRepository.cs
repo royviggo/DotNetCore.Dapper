@@ -28,11 +28,23 @@ namespace DotNetCore.Data.Repositories
             }, param: new { Id = id }, transaction: DbTransaction).FirstOrDefault();
         }
 
+        public IEnumerable<Event> GetByPerson(Person person)
+        {
+            return GetByPerson(person.Id);
+        }
+
         public IEnumerable<Event> GetByPerson(int personId)
         {
-            var query = GetBaseQuery().Where("e.PersonId = @PersonId");
+            var query = GetBaseQuery().Where(GetWherePerson());
 
             return GetListSql(query, new { PersonId = personId });
+        }
+
+        public IEnumerable<Event> GetByPerson(IEnumerable<int> personIds)
+        {
+            var query = GetBaseQuery().Where(GetWherePersonIn());
+
+            return GetListSql(query, new { PersonIds = personIds });
         }
 
         public IEnumerable<Event> GetByDate(GenDate date)
@@ -54,11 +66,25 @@ namespace DotNetCore.Data.Repositories
             return GetListSql(query, new { EventTypeId = eventTypeId });
         }
 
+        public IEnumerable<Event> GetByEventType(IEnumerable<int> eventTypeIds)
+        {
+            var query = GetBaseQuery().Where(GetWhereEventTypeIn());
+
+            return GetListSql(query, new { EventTypeIds = eventTypeIds });
+        }
+
         public IEnumerable<Event> GetByEventTypeAndDate(int eventTypeId, GenDate date)
         {
-            var query = GetBaseQuery().Where(GetWhereDate()).And(GetWhereEventType());
+            var query = GetBaseQuery().Where(GetWhereEventType()).And(GetWhereDate());
 
             return GetListSql(query, new { EventTypeId = eventTypeId, date.From, date.To });
+        }
+
+        public IEnumerable<Event> GetByEventTypeAndDate(IEnumerable<int> eventTypeIds, GenDate date)
+        {
+            var query = GetBaseQuery().Where(GetWhereEventTypeIn()).And(GetWhereDate());
+
+            return GetListSql(query, new { EventTypeIds = eventTypeIds, date.From, date.To });
         }
 
         public IEnumerable<Event> GetByPlace(Place place)
@@ -71,6 +97,13 @@ namespace DotNetCore.Data.Repositories
             var query = GetBaseQuery().Where(GetWherePlace());
 
             return GetListSql(query, new { PlaceId = placeId });
+        }
+
+        public IEnumerable<Event> GetByPlace(IEnumerable<int> placeIds)
+        {
+            var query = GetBaseQuery().Where(GetWherePlaceIn());
+
+            return GetListSql(query, new { PlaceIds = placeIds });
         }
 
         public override IEnumerable<Event> GetListSql(string query, object param)
@@ -99,6 +132,16 @@ namespace DotNetCore.Data.Repositories
                 ";
         }
 
+        private static string GetWherePerson()
+        {
+            return @"e.PersonId = @PersonId";
+        }
+
+        private static string GetWherePersonIn()
+        {
+            return @"e.PersonId IN @PersonIds";
+        }
+
         private static string GetWhereDate()
         {
             return @"((e.Date_From BETWEEN @From AND @To) OR 
@@ -112,9 +155,19 @@ namespace DotNetCore.Data.Repositories
             return @"(e.EventTypeId = @EventTypeId)";
         }
 
+        private static string GetWhereEventTypeIn()
+        {
+            return @"(e.EventTypeId IN @EventTypeIds)";
+        }
+
         private static string GetWherePlace()
         {
             return @"(e.PlaceId = @PlaceId)";
+        }
+
+        private static string GetWherePlaceIn()
+        {
+            return @"(e.PlaceId IN @PlaceIds)";
         }
     }
 }
