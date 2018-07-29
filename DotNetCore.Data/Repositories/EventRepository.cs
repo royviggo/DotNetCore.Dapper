@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
+using System.IO;
+using System.Text;
+using System;
 
 namespace DotNetCore.Data.Repositories
 {
@@ -104,6 +107,15 @@ namespace DotNetCore.Data.Repositories
             var query = GetBaseQuery().Where(GetWherePlaceIn());
 
             return GetListSql(query, new { PlaceIds = placeIds });
+        }
+
+        public IEnumerable<Event> GetByQuery(IEnumerable<WhereClause> whereList)
+        {
+            var whereClauses = new WhereClauses(whereList);
+            var query = GetBaseQuery().Where(whereClauses.Resolve());
+
+            var result =  GetListSql(query, whereClauses.Parameters);
+            return result;
         }
 
         public override IEnumerable<Event> GetListSql(string query, object param)

@@ -1,4 +1,5 @@
 ﻿using DotNetCore.Data.Entities;
+using DotNetCore.Data.Utils;
 using GenDateTools;
 using System;
 using System.Collections.Generic;
@@ -23,5 +24,7 @@ namespace DotNetCore.Data.Interfaces
         IEnumerable<Event> GetByPlace(Place place);
         IEnumerable<Event> GetByPlace(int placeId);
         IEnumerable<Event> GetByPlace(IEnumerable<int> placeIds);
+
+        IEnumerable<Event> GetByQuery(IEnumerable<WhereClause> whereList);
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using DotNetCore.Data.Database;
+using DotNetCore.Data.Utils;
 using GenDateTools;
 
 namespace DotNetCore
@@ -82,6 +84,40 @@ namespace DotNetCore
 
                 var eventsPlace = unitOfWork.Events.GetByPlace(177);
                 foreach (var e in eventsPlace)
+                {
+                    Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("Events by query");
+
+                var param = new Dictionary<string, object>
+                {
+                    { "PersonId", new int[] { 1, 2, 3 } },
+                    { "EventTypeId", new int[] { 1, 3, 7 } }
+                };
+
+                var whereList = new List<WhereClause>
+                {
+                    new WhereClause
+                    {
+                        Join = WhereJoin.And,
+                        Field = "e.PersonId",
+                        Operator = WhereOperator.In,
+                        Value = "@PersonId",
+                    },
+                    new WhereClause
+                    {
+                        Join = WhereJoin.And,
+                        Field = "e.EventTypeId",
+                        Operator = WhereOperator.In,
+                        Value = "@EventTypeId",
+                        Parameters = param,
+                    }
+                };
+
+                var eventsQuery = unitOfWork.Events.GetByQuery(whereList);
+                foreach (var e in eventsQuery)
                 {
                     Console.WriteLine("{0} - {1} {2}, {3} - {4}", e.Id, e.EventType.Name, e.Date, e.Place?.Name, e.Description);
                 }

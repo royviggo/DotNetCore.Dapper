@@ -26,7 +26,7 @@ namespace DotNetCore.Data.Utils
 
         public static string Paging(this string query, string template)
         {
-            return String.Format(template, query);
+            return string.Format(template, query);
         }
     }
 }
