@@ -91,29 +91,10 @@ namespace DotNetCore
                 Console.WriteLine();
                 Console.WriteLine("Events by query");
 
-                var param = new Dictionary<string, object>
-                {
-                    { "PersonId", new int[] { 1, 2, 3 } },
-                    { "EventTypeId", new int[] { 1, 3, 7 } }
-                };
-
                 var whereList = new List<WhereClause>
                 {
-                    new WhereClause
-                    {
-                        Join = WhereJoin.And,
-                        Field = "e.PersonId",
-                        Operator = WhereOperator.In,
-                        Value = "@PersonId",
-                    },
-                    new WhereClause
-                    {
-                        Join = WhereJoin.And,
-                        Field = "e.EventTypeId",
-                        Operator = WhereOperator.In,
-                        Value = "@EventTypeId",
-                        Parameters = param,
-                    }
+                    new WhereClause(WhereJoin.And, "e.PersonId", WhereOperator.In, "@PersonId", new Dictionary<string, object> { { "PersonId", new int[] { 1, 2, 3 } } }),
+                    new WhereClause(WhereJoin.And, "e.EventTypeId", WhereOperator.Equal, "@EventTypeId", new Dictionary<string, object> { { "EventTypeId", 1 } }),
                 };
 
                 var eventsQuery = unitOfWork.Events.GetByQuery(whereList);

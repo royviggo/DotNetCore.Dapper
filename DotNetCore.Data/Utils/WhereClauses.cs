@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace DotNetCore.Data.Utils
@@ -47,8 +48,12 @@ namespace DotNetCore.Data.Utils
         private string CreateWhereClause(WhereClause where)
         {
             if (where.Parameters != null)
-            foreach (var param in where.Parameters)
-                Parameters.TryAdd(param.Key, param.Value);
+            {
+                foreach (var param in where.Parameters)
+                {
+                    Parameters.TryAdd(param.Key, param.Value);
+                }
+            }
 
             return string.Concat(where.Field, where.Operator.GetDescription(), where.Value);
         }
